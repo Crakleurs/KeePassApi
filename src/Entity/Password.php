@@ -61,6 +61,12 @@ class Password
      */
     private $groups;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=SubMainPassword::class, inversedBy="passwords")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $subMainPassword;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
@@ -172,6 +178,18 @@ class Password
     public function removeGroup(Group $group): self
     {
         $this->groups->removeElement($group);
+
+        return $this;
+    }
+
+    public function getSubMainPassword(): ?SubMainPassword
+    {
+        return $this->subMainPassword;
+    }
+
+    public function setSubMainPassword(?SubMainPassword $subMainPassword): self
+    {
+        $this->subMainPassword = $subMainPassword;
 
         return $this;
     }

@@ -35,6 +35,11 @@ class Group
      */
     private $passwords;
 
+    /**
+     * @ORM\OneToOne(targetEntity=SubMainPassword::class, mappedBy="groups", cascade={"persist", "remove"})
+     */
+    private $subMainPassword;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -108,6 +113,23 @@ class Group
         if ($this->passwords->removeElement($password)) {
             $password->removeGroup($this);
         }
+
+        return $this;
+    }
+
+    public function getSubMainPassword(): ?SubMainPassword
+    {
+        return $this->subMainPassword;
+    }
+
+    public function setSubMainPassword(SubMainPassword $subMainPassword): self
+    {
+        // set the owning side of the relation if necessary
+        if ($subMainPassword->getGroups() !== $this) {
+            $subMainPassword->setGroups($this);
+        }
+
+        $this->subMainPassword = $subMainPassword;
 
         return $this;
     }
