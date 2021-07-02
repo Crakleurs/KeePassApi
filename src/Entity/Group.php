@@ -25,10 +25,6 @@ class Group
      */
     private $groupName;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="groups")
-     */
-    private $users;
 
     /**
      * @ORM\ManyToMany(targetEntity=Password::class, mappedBy="groups")
@@ -39,6 +35,11 @@ class Group
      * @ORM\OneToOne(targetEntity=SubMainPassword::class, mappedBy="groups", cascade={"persist", "remove"})
      */
     private $subMainPassword;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="groups")
+     */
+    private $users;
 
     public function __construct()
     {
@@ -63,32 +64,6 @@ class Group
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeGroup($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Password[]
@@ -130,6 +105,33 @@ class Group
         }
 
         $this->subMainPassword = $subMainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeGroup($this);
+        }
 
         return $this;
     }
